@@ -6,8 +6,6 @@
 package com.mycompany.inventory.doa.config;
 
 import java.sql.*;
-import java.io.*;
-import java.util.*;
 
 public class ConnectionDB {
 
@@ -31,12 +29,16 @@ public class ConnectionDB {
 
     public static synchronized ConnectionDB getInstance() {
 
-        if (instance == null) {
+        try {
+            if (instance == null || instance.getConnection().isClosed()) {
 
-            instance = new ConnectionDB();
+                instance = new ConnectionDB();
 
-            System.out.println("instance : " + instance);
+                System.out.println("instance : " + instance);
 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return instance;
