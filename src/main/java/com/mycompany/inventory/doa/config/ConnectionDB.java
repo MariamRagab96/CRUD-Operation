@@ -5,7 +5,10 @@
  */
 package com.mycompany.inventory.doa.config;
 
+import com.mycompany.inventory.doa.model.impl.UserModelImpl;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConnectionDB {
 
@@ -44,4 +47,12 @@ public class ConnectionDB {
         return instance;
     }
 
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserModelImpl.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

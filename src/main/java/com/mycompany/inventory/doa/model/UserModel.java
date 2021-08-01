@@ -6,6 +6,7 @@
 package com.mycompany.inventory.doa.model;
 
 import com.mycompany.inventory.doa.entity.User;
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -23,4 +24,7 @@ public interface UserModel {
     void createUser(User user);
 
     User findByUserAndPassword(String username, String password);
+
+    boolean isUserNameExist(String username);
+
 }

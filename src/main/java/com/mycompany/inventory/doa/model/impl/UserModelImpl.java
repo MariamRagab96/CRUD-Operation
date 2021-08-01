@@ -10,18 +10,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserModelImpl implements UserModel {
 
     private final String INSERT_USER = "INSERT INTO USER (USERNAME,PASSWORD) VALUES (?,?)";
     private final String DELETE_USER = "DELETE FROM USER WHERE ID = ?";
     private final String SELECT_ALL = "SELECT * FROM USER";
-    private final String SELECT_BY_USER_PASSWORD = "SELECT * FROM USER WHERE USERNAME = ? "
+    private final String SELECT_BY_USER_AND_PASSWORD = "SELECT * FROM USER WHERE USERNAME = ? "
             + "AND PASSWORD = ?";
+    private final String SELECT_BY_USER = "SELECT USERNAME FROM USER WHERE USERNAME = ? ";
     private final String UPDATE_USER = "UPDATE USER SET USERNAME=? , PASSWORD=? WHERE ID =?";
     private Connection connection;
     private PreparedStatement preparedStatement = null;
-    private ResultSet resultSet = null;
 
     public UserModelImpl() {
         connection = ConnectionDB.getInstance().getConnection();
@@ -66,12 +68,9 @@ public class UserModelImpl implements UserModel {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ConnectionDB.getInstance().closeConnection();
         }
+
         return 0;
     }
 
@@ -81,7 +80,7 @@ public class UserModelImpl implements UserModel {
         List<User> users = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(SELECT_ALL);
-            resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt("ID"));
@@ -92,6 +91,8 @@ public class UserModelImpl implements UserModel {
             return users;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.getInstance().closeConnection();
         }
         return users;
     }
@@ -105,8 +106,11 @@ public class UserModelImpl implements UserModel {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.executeUpdate();
-            resultSet = preparedStatement.getGeneratedKeys();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            System.out.println("resultSet : " + resultSet);
+            System.out.println("resultSet.next() : " + resultSet.next());
             if (resultSet.next()) {
+
                 id = resultSet.getInt(1);
             }
             user.setId(id);
@@ -114,22 +118,19 @@ public class UserModelImpl implements UserModel {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ConnectionDB.getInstance().closeConnection();
         }
+
     }
 
     @Override
     public User findByUserAndPassword(String username, String password) {
         User user = null;
         try {
-            preparedStatement = connection.prepareStatement(SELECT_BY_USER_PASSWORD);
+            preparedStatement = connection.prepareStatement(SELECT_BY_USER_AND_PASSWORD);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
-            resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 user = new User();
                 user.setId(resultSet.getInt("ID"));
@@ -138,7 +139,25 @@ public class UserModelImpl implements UserModel {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.getInstance().closeConnection();
         }
         return user;
     }
+
+    @Override
+    public boolean isUserNameExist(String username) {
+        boolean res = false;
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_BY_USER);
+            preparedStatement.setString(1, username);
+            System.out.println(preparedStatement);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            res = resultSet.next();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserModelImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+
 }

@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "login", urlPatterns = "/login")
 public class Login extends HttpServlet {
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    }
+
     /**
      *
      * @param req
@@ -22,7 +26,7 @@ public class Login extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       
+
         String userName = req.getParameter("username");
         String password = req.getParameter("password");
         System.out.println(userName + " " + password);
@@ -30,7 +34,9 @@ public class Login extends HttpServlet {
         User user = userModel.findByUserAndPassword(userName, password);
         System.out.println("user " + user);
         if (user != null) {
-            req.getRequestDispatcher("InventoryShow.jsp").forward(req, resp);
+
+            //req.getRequestDispatcher("SelectInventory").forward(req, resp);
+            resp.sendRedirect("/inventory/SelectInventory");
         } else {
             String msg = "Invalid Username or Password Please Try again";
             System.out.println("msg : " + msg);
