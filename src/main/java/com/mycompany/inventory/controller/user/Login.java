@@ -1,4 +1,4 @@
-package com.mycompany.inventory.controller.servlet.user;
+package com.mycompany.inventory.controller.user;
 
 import com.mycompany.inventory.doa.entity.User;
 import com.mycompany.inventory.doa.model.UserModel;
@@ -41,7 +41,7 @@ public class Login extends HttpServlet {
             String msg = "Invalid Username or Password Please Try again";
             System.out.println("msg : " + msg);
             req.setAttribute("msg", msg);
-            req.getRequestDispatcher("index.jsp").forward(req, resp);
+            req.getRequestDispatcher("index.jsp").include(req, resp);
         }
     }
 }

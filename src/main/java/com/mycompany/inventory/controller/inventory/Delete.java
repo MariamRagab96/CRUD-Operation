@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.inventory.controller.servlet.inventory;
+package com.mycompany.inventory.controller.inventory;
 
 import com.mycompany.inventory.doa.entity.Inventory;
 import com.mycompany.inventory.doa.model.InventoryModel;
