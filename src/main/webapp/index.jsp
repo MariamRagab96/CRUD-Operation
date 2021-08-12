@@ -35,14 +35,14 @@
             <!-- Email input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="form1Example1">Username</label>
-                <input type="text" id="form1Example1" class="form-control" name="username"/>
+                <input type="text" id="username" class="form-control" name="username" required/>
 
             </div>
 
             <!-- Password input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="form1Example2">Password</label>
-                <input type="password" id="form1Example2" class="form-control" name="password"/>
+                <input type="password" id="password" class="form-control" name="password" required/>
 
             </div>
 

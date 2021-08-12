@@ -1,11 +1,10 @@
 <%-- 
-    Document   : InsertUser
-    Created on : Jul 25, 2021, 11:32:47 PM
-    Author     : Mariam Ragab
+    Document   : InsertInventory
+    Created on : Jul 26, 2021, 9:42:53 PM
+    Author     : Developer
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -31,29 +30,30 @@
         </style>
     </head>
     <body>
-        <br>
-        <br>
-        <form method ="post" action ="register" class="col-md-6" style="margin: auto;">
+        <!--onsubmit="return validateSoldBought()"-->
+        <form class="col-md-6" style="margin: auto;" onsubmit="return mysubmit()" action="insertInventory"  method="post"  >
             <div class="col-md-6">
-                <label for="inputUsername4" class="form-label">Username</label>
-                <input type="text" class="form-control" id="inputUsername4" name="username" required>
+                <label for="inputItem" class="form-label">Inventory Item</label>
+                <input type="text" class="form-control" id="item" name="item" required>
             </div>
 
             <div class="col-md-6">
-                <label for="inputPassword4" class="form-label">Password</label>
-                <input type="password" class="form-control" id="inputPassword4" name ="password" required>
+                <label for="sold" class="form-label">Sold</label>
+                <input type="number" class="form-control" id="sold" name="sold" required onblur="return validateSoldBought()">
             </div>
-            <br>
+            <div class="col-md-6">
+                <label for="bought" class="form-label">Bought</label>
+                <input type="number" class="form-control" id="bought" name="bought" required onblur="return validateSoldBought()">
+            </div>
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Sign up </button>
+                <br>
+                <div class ="invalid" id ="invalid"></div>
+                <br>
+                <button type="submit" class="btn btn-primary" >Insert</button>
             </div>
-
-            <c:if test="${!empty requestScope.msg}">
-                <p class="invalid">
-                    <br>
-                <c:out value=" ${requestScope.msg}"></c:out>
-                </p>
-            </c:if>
         </form>
+        <script src=validation.js></script>
     </body>
+
+
 </html>
