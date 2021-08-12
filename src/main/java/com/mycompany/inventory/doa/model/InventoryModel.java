@@ -13,4 +13,6 @@ public interface InventoryModel {
 
     void insert(Inventory inventory);
 
+    Inventory retriveById(int id);
+
 }

@@ -16,12 +16,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InventoryModelImpl implements InventoryModel {
 
     private final String INSERT = "INSERT INTO INVENTORY (ITEM,BOUGHT,SOLD) VALUES (?,?,?)";
     private final String DELETE = "DELETE FROM INVENTORY WHERE ID = ?";
     private final String SELECT_ALL = "SELECT * FROM INVENTORY";
+    private final String SELECT_ONE = "SELECT * FROM INVENTORY WHERE ID = ?";
     private final String UPDATE = "UPDATE INVENTORY SET ITEM=? , BOUGHT=?, SOLD=? WHERE ID =?";
     private Connection connection;
     private PreparedStatement preparedStatement = null;
@@ -34,9 +37,10 @@ public class InventoryModelImpl implements InventoryModel {
 
     public static void main(String[] args) {
         InventoryModel i = new InventoryModelImpl();
-        Inventory inventory = new Inventory("Dress", 10, 20);
-        System.out.println(i.update(inventory));
-        System.out.println(i.delete(1));
+        System.out.println(i.retriveById(3));
+//        Inventory inventory = new Inventory("Dress", 10, 20);
+//        System.out.println(i.update(inventory));
+//        System.out.println(i.delete(1));
     }
 
     @Override
@@ -120,5 +124,25 @@ public class InventoryModelImpl implements InventoryModel {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Inventory retriveById(int id) {
+        Inventory inventory = null;
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_ONE);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                inventory = new Inventory();
+                inventory.setId(resultSet.getInt("ID"));
+                inventory.setItem(resultSet.getString("ITEM"));
+                inventory.setBought(resultSet.getInt("BOUGHT"));
+                inventory.setSold(resultSet.getInt("SOlD"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InventoryModelImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return inventory;
     }
 }
